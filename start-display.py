@@ -16,7 +16,7 @@ import time
 from datetime import datetime
 
 # Paths
-dirname = os.path.dirname(os.path.abspath(__file__))
+dirname = "/dev/shm"
 screenshot_path = os.path.join(dirname, 'screenshot.png')
 
 # Set up logging
