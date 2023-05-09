@@ -18,9 +18,9 @@ from datetime import date, timezone
 
 # API stuff
 API_URLs = {
-    'observations': 'https://api.weather.bom.gov.au/v1/locations/r1r0z4/observations',
-    'forecast-daily': 'https://api.weather.bom.gov.au/v1/locations/r1r0z4/forecasts/daily',
-    'forecast-hourly': 'https://api.weather.bom.gov.au/v1/locations/r1r0z4/forecasts/hourly'
+    'observations': 'https://api.weather.bom.gov.au/v1/locations/r7h6gc/observations',
+    'forecast-daily': 'https://api.weather.bom.gov.au/v1/locations/r7h6gc/forecasts/daily',
+    'forecast-hourly': 'https://api.weather.bom.gov.au/v1/locations/r7h6gc/forecasts/hourly'
 }
 
 def load_API_data(URL):
@@ -56,7 +56,7 @@ def index():
    
     # Maintain a JSON log file of the hourly forecast temperatures
     hourly_temps = {}
-    hourly_temps_log_path = "../data/hourly-temp-log.json"
+    hourly_temps_log_path = "/dev/shm/hourly-temp-log.json"
 
     ## Load json log file and delete it if it exists
     if os.path.exists(hourly_temps_log_path):
