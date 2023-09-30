@@ -18,9 +18,9 @@ from datetime import date, timezone
 
 # API stuff
 API_URLs = {
-    'observations': 'https://api.weather.bom.gov.au/v1/locations/r7h6gc/observations',
-    'forecast-daily': 'https://api.weather.bom.gov.au/v1/locations/r7h6gc/forecasts/daily',
-    'forecast-hourly': 'https://api.weather.bom.gov.au/v1/locations/r7h6gc/forecasts/hourly'
+    'observations': 'https://api.weather.bom.gov.au/v1/locations/r7hgfu/observations',
+    'forecast-daily': 'https://api.weather.bom.gov.au/v1/locations/r7hgfu/forecasts/daily',
+    'forecast-hourly': 'https://api.weather.bom.gov.au/v1/locations/r7hgfu/forecasts/hourly'
 }
 
 def load_API_data(URL):

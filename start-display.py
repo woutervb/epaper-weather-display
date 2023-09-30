@@ -2,10 +2,6 @@
 
 import logging
 
-from inky.auto import auto
-from inky.inky_uc8159 import CLEAN
-from PIL import Image
-
 import sys
 import os.path
 from subprocess import Popen, TimeoutExpired
@@ -16,8 +12,8 @@ import time
 from datetime import datetime
 
 # Paths
-dirname = "/dev/shm"
-screenshot_path = os.path.join(dirname, 'screenshot.png')
+dirname = "/var/www/html"
+screenshot_path = os.path.join(dirname, 'inky.png')
 
 # Set up logging
 logging.basicConfig(filename='debug.log', format='[%(asctime)s] [%(levelname)s] %(message)s', level=logging.DEBUG)
@@ -36,7 +32,7 @@ def time_elapsed():
 # Start Gunicorn process and wait for server to start
 log('Starting gunicorn server')
 
-gunicorn_command = f'{sys.executable} -m gunicorn --access-logfile=- --chdir=\'{dirname}\' \'app:app\''
+gunicorn_command = f'gunicorn --access-logfile=- --chdir=\'{dirname}\' \'app:app\' --bind=localhost:9000'
 gunicorn_process = Popen(shlex.split(gunicorn_command),
     stdout=logfile, stderr=logfile)
 
@@ -45,7 +41,7 @@ time.sleep(2)
 # Start Chromium process
 log(f'Rendering display to an image with Chromium')
 
-chromium_command = f'chromium-browser --headless --window-size=640,400 --screenshot="{screenshot_path}" "http://127.0.0.1:8000"'
+chromium_command = f'chromium-browser --headless --window-size=640,400 --screenshot="{screenshot_path}" "http://127.0.0.1:9000"'
 chromium_process = Popen(shlex.split(chromium_command), stdout=logfile, stderr=logfile)
 
 # Wait for Chromium process to finish or kill it
@@ -66,31 +62,6 @@ except TimeoutExpired:
 
 log(f'Finished rendering image in {time_elapsed()}, writing to display! ✍️')
 
-# Inky display instance
-inky = auto(ask_user=True, verbose=True)
-
-# Clean display if it is midnight
-if datetime.now().hour == 0:
-    log('It\'s midnight! Cleaning display first')
-    for y in range(inky.height - 1):
-        for x in range(inky.width - 1):
-            inky.set_pixel(x, y, CLEAN)
-
-    inky.show()
-    time.sleep(1.0)
-
-# Write screenshot to display
-image = Image.open(screenshot_path)
-resized_image = image.resize(inky.resolution)
-inky.set_image(resized_image, saturation=0)
-inky.show()
-
-# Optionally, save a copy of each image
-log('Saving a copy of the image')
-file_index = 1
-screenshot_log_path = os.path.join(dirname, '..', 'data', 'screenshots')
-while os.path.exists(os.path.join(screenshot_log_path, f'screenshot{file_index}.png')): file_index += 1
-shutil.copyfile(screenshot_path, f'{screenshot_log_path}screenshot{file_index}.png')
 
 # Finish up
 logfile.close()
